@@ -1,0 +1,51 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "orgId": {
+            "type": "string"
+        },
+        "api-url": {
+            "type": "String",
+            "defaultValue": "https://api-apex.contentandcloud.com/events/cas-receiver/cas-receiver?org="
+        },
+        "api-keyPrefix": {
+            "type": "string",
+            "defaultValue": "&subscription-key="
+        },
+        "api-keyValue": {
+            "type": "string"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "microsoft.insights/actionGroups",
+            "apiVersion": "2022-06-01",
+            "name": "C+C Action Groups, (CHG0058007)",
+            "location": "Global",
+            "properties": {
+                "groupShortName": "cas-catchall",
+                "enabled": true,
+                "emailReceivers": [],
+                "smsReceivers": [],
+                "webhookReceivers": [
+                    {
+                        "name": "Common Alert Schema Receiver for Content+Cloud",
+                        "serviceUri": "[concat(parameters('api-url'),parameters('orgId'),parameters('api-keyPrefix'),parameters('api-keyValue'))]",
+                        "useCommonAlertSchema": true,
+                        "useAadAuth": false
+                    }
+                ],
+                "eventHubReceivers": [],
+                "itsmReceivers": [],
+                "azureAppPushReceivers": [],
+                "automationRunbookReceivers": [],
+                "voiceReceivers": [],
+                "logicAppReceivers": [],
+                "azureFunctionReceivers": [],
+                "armRoleReceivers": []
+            }
+        }
+    ]
+}
